@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Together - Our Love Story</title>
+    
+    <!-- Cute Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&family=Patrick+Hand&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#fffaf6',
+                        pastel: {
+                            pink: '#ffb7c5',
+                            softPink: '#fff0f3',
+                            rose: '#ff758f',
+                            deepRose: '#ff4d6d',
+                            peach: '#ffdac1',
+                            yellow: '#fff1e6',
+                            purple: '#e2afff',
+                            dusk: '#221929',
+                            duskCard: '#2d2236',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        display: ['Fredoka', 'sans-serif'],
+                        cute: ['Patrick Hand', 'cursive'],
+                    },
+                    boxShadow: {
+                        'cute': '0 8px 25px -5px rgba(255, 117, 143, 0.15), 0 4px 10px -6px rgba(0, 0, 0, 0.05)',
+                        'cute-hover': '0 15px 30px -5px rgba(255, 117, 143, 0.25), 0 8px 15px -6px rgba(0, 0, 0, 0.08)',
+                        'pill': '0 4px 15px rgba(255, 183, 197, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom Pastel Styling & Animations -->
+    <style>
+        :root {
+            --bg-color: #fff9f6;
+            --text-color: #4a3b44;
+        }
+
+        html.dark {
+            --bg-color: #1e1724;
+            --text-color: #f7e8f0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.4s ease, color 0.4s ease;
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        /* Cute Glass Pill Card */
+        .cute-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 228, 233, 0.8);
+            border-radius: 1.75rem;
+            box-shadow: 0 10px 25px -5px rgba(255, 183, 197, 0.2);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+        }
+
+        .dark .cute-card {
+            background: rgba(45, 34, 54, 0.85);
+            border: 2px solid rgba(85, 60, 100, 0.5);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Polaroid Styling with Cute Tape */
+        .polaroid-card {
+            background: #ffffff;
+            padding: 12px 12px 20px 12px;
+            border-radius: 1rem;
+            box-shadow: 0 8px 20px rgba(255, 183, 197, 0.25);
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .dark .polaroid-card {
+            background: #2a2033;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .polaroid-card:hover {
+            transform: translateY(-8px) scale(1.02) rotate(0deg) !important;
+            box-shadow: 0 16px 30px rgba(255, 117, 143, 0.35);
+            z-index: 20;
+        }
+
+        /* Cute Washi Tape / Heart Pin */
+        .cute-tape {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-1deg);
+            width: 70px;
+            height: 22px;
+            background: rgba(255, 183, 197, 0.8);
+            border-radius: 4px;
+            backdrop-filter: blur(2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+            z-index: 10;
+        }
+
+        .cute-tape::after {
+            content: '♥';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffffff;
+            font-size: 11px;
+        }
+
+        /* 3D Envelope Component */
+        .envelope-wrapper {
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .envelope {
+            width: 290px;
+            height: 190px;
+            background: #ffb7c5;
+            border-radius: 18px;
+            box-shadow: 0 15px 30px rgba(255, 117, 143, 0.25);
+            position: relative;
+            margin: 0 auto;
+            transition: transform 0.3s ease;
+        }
+
+        .dark .envelope {
+            background: #6b3e56;
+        }
+
+        .envelope:hover {
+            transform: translateY(-6px) scale(1.02);
+        }
+
+        .envelope .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            border-top: 105px solid #ff9ebb;
+            border-left: 145px solid transparent;
+            border-right: 145px solid transparent;
+            transform-origin: top;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.5s;
+            z-index: 4;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .dark .envelope .flap {
+            border-top-color: #824b69;
+        }
+
+        .envelope.open .flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .envelope .pocket {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border-bottom: 100px solid #ff758f;
+            border-left: 145px solid #ff8fa3;
+            border-right: 145px solid #ff8fa3;
+            border-radius: 0 0 18px 18px;
+            z-index: 3;
+        }
+
+        .dark .envelope .pocket {
+            border-bottom-color: #9d5073;
+            border-left-color: #8b4465;
+            border-right-color: #8b4465;
+        }
+
+        .envelope .seal {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 46px;
+            height: 46px;
+            background: #ff4d6d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.25rem;
+            box-shadow: 0 4px 12px rgba(255, 77, 109, 0.4);
+            z-index: 5;
+            transition: transform 0.3s ease;
+        }
+
+        .envelope:hover .seal {
+            transform: translateX(-50%) scale(1.15);
+        }
+
+        .letter-preview {
+            position: absolute;
+            bottom: 12px;
+            left: 18px;
+            right: 18px;
+            height: 140px;
+            background: #fffaf0;
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 2;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 1.2rem;
+            color: #6b2d41;
+            overflow: hidden;
+            border: 2px dashed #ffd1dc;
+        }
+
+        .envelope.open .letter-preview {
+            transform: translateY(-75px);
+        }
+
+        /* Pulse Heart Animation */
+        @keyframes cuteBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.18); }
+        }
+
+        .cute-pulse {
+            animation: cuteBounce 2s infinite ease-in-out;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fff0f3;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ffb7c5;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff758f;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen pb-16 antialiased selection:bg-pastel-pink selection:text-white">
+
+    <!-- Full-screen Background Floating Hearts & Sparkles Canvas -->
+    <canvas id="heartCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+    <!-- Main Content Container -->
+    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pt-6">
+
+        <!-- Cute Floating Header Action Bar -->
+        <header class="flex items-center justify-between p-3 sm:p-4 cute-card mb-8">
+            <div class="flex items-center space-x-3 pl-2">
+                <span class="w-10 h-10 rounded-full bg-pastel-pink/30 text-pastel-deepRose flex items-center justify-center text-xl cute-pulse">
+                    <i class="fa-solid fa-heart"></i>
+                </span>
+                <div>
+                    <h1 class="font-display text-xl sm:text-2xl font-bold text-pastel-deepRose tracking-wide">Time Together</h1>
+                    <p class="text-[11px] font-semibold text-rose-400 uppercase tracking-wider hidden sm:block">Our Cute Love Story 🍓</p>
+                </div>
+            </div>
+
+            <!-- Header Quick Controls -->
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <!-- Theme Toggle Button -->
+                <button id="themeToggleBtn" class="w-10 h-10 rounded-full bg-rose-100 dark:bg-pastel-dusk text-rose-600 dark:text-pastel-purple flex items-center justify-center shadow-sm hover:scale-105 transition" title="Toggle Soft Dusk Theme">
+                    <i id="themeIcon" class="fa-solid fa-moon text-sm sm:text-base"></i>
+                </button>
+
+                <!-- Audio Sound Toggle -->
+                <button id="musicBtn" class="w-10 h-10 rounded-full bg-rose-100 dark:bg-pastel-dusk text-rose-600 dark:text-pastel-purple flex items-center justify-center shadow-sm hover:scale-105 transition" title="Toggle Cute Ambient Sound">
+                    <i class="fa-solid fa-music text-sm sm:text-base"></i>
+                </button>
+
+                <!-- Edit Customizer Modal Open Button -->
+                <button id="openSettingsBtn" class="px-4 py-2 rounded-full bg-gradient-to-r from-pastel-pink to-pastel-rose text-white font-display text-xs sm:text-sm font-semibold shadow-pill hover:shadow-cute-hover hover:scale-105 active:scale-95 transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span class="hidden sm:inline">Customize</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Couple Profile Hero Card -->
+        <section class="mb-8">
+            <div class="cute-card p-6 sm:p-8 text-center relative overflow-hidden">
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 mb-5">
+                    
+                    <!-- Partner 1 -->
+                    <div class="flex flex-col items-center">
+                        <div class="relative group">
+                            <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1.5 bg-gradient-to-tr from-pastel-pink to-pastel-rose shadow-md overflow-hidden transition-transform group-hover:scale-105">
+                                <img id="p1Photo" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Partner 1" class="w-full h-full object-cover rounded-full">
+                            </div>
+                            <span class="absolute bottom-1 right-1 bg-pastel-pink text-white w-7 h-7 rounded-full flex items-center justify-center text-xs shadow-sm">
+                                🎀
+                            </span>
+                        </div>
+                        <h2 id="p1Name" class="font-display text-2xl font-bold text-pastel-deepRose dark:text-pastel-pink mt-3">Alex</h2>
+                    </div>
+
+                    <!-- Heart Bridge Connector -->
+                    <div class="flex flex-col items-center justify-center my-1 sm:my-0">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-r from-pastel-pink to-pastel-deepRose text-white flex items-center justify-center shadow-pill cute-pulse">
+                            <i class="fa-solid fa-heart text-xl"></i>
+                        </div>
+                        <span class="font-cute text-2xl text-rose-400 mt-1">&</span>
+                    </div>
+
+                    <!-- Partner 2 -->
+                    <div class="flex flex-col items-center">
+                        <div class="relative group">
+                            <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full p-1.5 bg-gradient-to-tr from-pastel-pink to-pastel-rose shadow-md overflow-hidden transition-transform group-hover:scale-105">
+                                <img id="p2Photo" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80" alt="Partner 2" class="w-full h-full object-cover rounded-full">
+                            </div>
+                            <span class="absolute bottom-1 right-1 bg-pastel-rose text-white w-7 h-7 rounded-full flex items-center justify-center text-xs shadow-sm">
+                                🌸
+                            </span>
+                        </div>
+                        <h2 id="p2Name" class="font-display text-2xl font-bold text-pastel-deepRose dark:text-pastel-pink mt-3">Maya</h2>
+                    </div>
+
+                </div>
+
+                <!-- Start Date Badge -->
+                <div class="inline-flex items-center space-x-2 bg-rose-50 dark:bg-pastel-dusk/60 px-5 py-2 rounded-full text-rose-600 dark:text-pastel-pink text-xs sm:text-sm font-semibold border border-rose-200/50">
+                    <i class="fa-solid fa-calendar-heart text-pastel-rose"></i>
+                    <span>Together since <strong id="displayStartDate">February 14, 2022</strong></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Relationship Counter Grid -->
+        <section class="mb-10">
+            <div class="text-center mb-5">
+                <h2 class="font-display text-2xl sm:text-3xl font-bold text-pastel-deepRose dark:text-pastel-pink">Our Time Together</h2>
+                <p class="text-xs sm:text-sm text-rose-400 font-medium mt-1">Every second feels like magic ✨</p>
+            </div>
+
+            <!-- Timer Pills Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                <!-- Years -->
+                <div class="cute-card p-4 text-center transform transition hover:-translate-y-1">
+                    <span id="cntYears" class="block font-display text-3xl sm:text-4xl font-bold text-pastel-deepRose dark:text-pastel-pink">0</span>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-rose-400 mt-1 block">Years</span>
+                </div>
+                <!-- Months -->
+                <div class="cute-card p-4 text-center transform transition hover:-translate-y-1">
+                    <span id="cntMonths" class="block font-display text-3xl sm:text-4xl font-bold text-pastel-deepRose dark:text-pastel-pink">0</span>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-rose-400 mt-1 block">Months</span>
+                </div>
+                <!-- Days -->
+                <div class="cute-card p-4 text-center transform transition hover:-translate-y-1">
+                    <span id="cntDays" class="block font-display text-3xl sm:text-4xl font-bold text-pastel-deepRose dark:text-pastel-pink">0</span>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-rose-400 mt-1 block">Days</span>
+                </div>
+                <!-- Hours -->
+                <div class="cute-card p-4 text-center transform transition hover:-translate-y-1">
+                    <span id="cntHours" class="block font-display text-3xl sm:text-4xl font-bold text-pastel-deepRose dark:text-pastel-pink">00</span>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-rose-400 mt-1 block">Hours</span>
+                </div>
+                <!-- Minutes -->
+                <div class="cute-card p-4 text-center transform transition hover:-translate-y-1">
+                    <span id="cntMinutes" class="block font-display text-3xl sm:text-4xl font-bold text-pastel-deepRose dark:text-pastel-pink">00</span>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-rose-400 mt-1 block">Minutes</span>
+                </div>
+                <!-- Seconds -->
+                <div class="cute-card p-4 text-center bg-gradient-to-br from-rose-100/50 to-pink-100/50 dark:from-pastel-dusk dark:to-pastel-duskCard transform transition hover:-translate-y-1 border-rose-300">
+                    <span id="cntSeconds" class="block font-display text-3xl sm:text-4xl font-bold text-pastel-deepRose dark:text-pastel-pink animate-pulse">00</span>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-rose-400 mt-1 block">Seconds</span>
+                </div>
+            </div>
+
+            <!-- Anniversary & Milestone Progress Card -->
+            <div class="mt-5 cute-card p-5">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-3">
+                    <div class="flex items-center space-x-3 text-center sm:text-left">
+                        <div class="w-10 h-10 rounded-full bg-pastel-softPink text-pastel-deepRose flex items-center justify-center text-lg flex-shrink-0">
+                            <i class="fa-solid fa-cake-candles"></i>
+                        </div>
+                        <div>
+                            <span id="totalDaysText" class="font-display font-bold text-base text-pastel-deepRose dark:text-pastel-pink">0 Days of Love</span>
+                            <p class="text-xs text-rose-400">Road to our next anniversary milestone!</p>
+                        </div>
+                    </div>
+                    <div class="bg-rose-100 dark:bg-pastel-dusk px-4 py-1.5 rounded-full text-xs font-bold text-pastel-deepRose dark:text-pastel-purple">
+                        <i class="fa-solid fa-hourglass-start mr-1"></i>
+                        <span id="daysToNextAnniversaryText">0 Days Left</span>
+                    </div>
+                </div>
+
+                <!-- Cute Progress Bar -->
+                <div class="w-full bg-rose-100 dark:bg-pastel-dusk h-3.5 rounded-full overflow-hidden p-0.5 border border-rose-200/60">
+                    <div id="anniversaryProgressBar" class="bg-gradient-to-r from-pastel-pink via-pastel-rose to-pastel-deepRose h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Cute Love Letter Envelope Section -->
+        <section class="mb-12">
+            <div class="text-center mb-6">
+                <h2 class="font-display text-2xl sm:text-3xl font-bold text-pastel-deepRose dark:text-pastel-pink">Secret Love Note 💌</h2>
+                <p class="text-xs sm:text-sm text-rose-400 font-medium mt-1">Tap the heart seal to open our cute note</p>
+            </div>
+
+            <div class="flex justify-center">
+                <div class="envelope-wrapper" id="envelopeContainer">
+                    <div class="envelope" id="envelopeEl">
+                        <div class="flap"></div>
+                        <div class="pocket"></div>
+                        <div class="letter-preview" id="letterPreview">
+                            "My sweetest love, every single second spent with you..."
+                        </div>
+                        <div class="seal" id="sealBtn">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Polaroid Scrapbook Gallery Section -->
+        <section class="mb-12">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                <div>
+                    <h2 class="font-display text-2xl sm:text-3xl font-bold text-pastel-deepRose dark:text-pastel-pink">Our Memory Polaroid Scrapbook 📸</h2>
+                    <p class="text-xs sm:text-sm text-rose-400 font-medium mt-1">Snapshots of our favorite happy moments</p>
+                </div>
+                <button id="addMemoryBtn" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-pastel-pink to-pastel-rose text-white font-display text-sm font-semibold shadow-pill hover:scale-105 active:scale-95 transition flex items-center space-x-2 self-start sm:self-auto">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Add Polaroid</span>
+                </button>
+            </div>
+
+            <!-- Polaroid Grid -->
+            <div id="polaroidGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pt-2">
+                <!-- Dynamically populated Polaroid Memory Cards -->
+            </div>
+        </section>
+
+        <!-- Cute Footer -->
+        <footer class="mt-16 text-center pt-6 border-t border-rose-200/60 dark:border-pastel-dusk">
+            <p class="font-cute text-2xl text-pastel-deepRose dark:text-pastel-pink">"You are my favorite notification." 💌</p>
+            <p class="text-xs font-semibold text-rose-400 mt-2">Time Together &bull; Made with love for Alex & Maya</p>
+        </footer>
+
+    </div>
+
+    <!-- Customization Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 z-50 flex items-center justify-center bg-rose-950/40 backdrop-blur-sm hidden p-4">
+        <div class="cute-card w-full max-w-lg p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button id="closeSettingsBtn" class="absolute top-5 right-5 text-rose-400 hover:text-rose-600 w-8 h-8 rounded-full flex items-center justify-center hover:bg-rose-100 transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div class="flex items-center space-x-3 mb-6">
+                <div class="w-10 h-10 rounded-full bg-pastel-pink/30 text-pastel-deepRose flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <h3 class="font-display text-2xl font-bold text-pastel-deepRose dark:text-pastel-pink">Customize Our Story</h3>
+            </div>
+
+            <form id="settingsForm" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-rose-400 mb-1">Partner 1 Name</label>
+                        <input type="text" id="inputP1Name" required class="w-full px-4 py-2.5 rounded-2xl border-2 border-rose-200 focus:outline-none focus:border-pastel-rose bg-white dark:bg-pastel-dusk dark:border-pastel-duskCard text-sm font-semibold">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-rose-400 mb-1">Partner 2 Name</label>
+                        <input type="text" id="inputP2Name" required class="w-full px-4 py-2.5 rounded-2xl border-2 border-rose-200 focus:outline-none focus:border-pastel-rose bg-white dark:bg-pastel-dusk dark:border-pastel-duskCard text-sm font-semibold">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-rose-400 mb-1">Relationship Start Date & Time</label>
+                    <input type="datetime-local" id="inputStartDate" required class="w-full px-4 py-2.5 rounded-2xl border-2 border-rose-200 focus:outline-none focus:border-pastel-rose bg-white dark:bg-pastel-dusk dark:border-pastel-duskCard text-sm font-semibold">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-rose-400 mb-1">Partner 1 Photo</label>
+                        <input type="file" id="inputP1File" accept="image/*" class="text-xs text-rose-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-rose-100 file:text-rose-600 hover:file:bg-rose-200">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-rose-400 mb-1">Partner 2 Photo</label>
+                        <input type="file" id="inputP2File" accept="image/*" class="text-xs text-rose-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-rose-100 file:text-rose-600 hover:file:bg-rose-200">
+                    </div>
+                </div>
+
+                <div class="pt-4 flex justify-end space-x-3">
+                    <button type="button" id="cancelSettingsBtn" class="px-5 py-2.5 rounded-full border-2 border-rose-200 text-rose-500 text-sm font-bold hover:bg-rose-50 transition">Cancel</button>
+                    <button type="submit" class="px-6 py-2.5 rounded-full bg-gradient-to-r from-pastel-pink to-pastel-rose text-white text-sm font-bold shadow-pill hover:scale-105 transition">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Love Letter Modal -->
+    <div id="letterModal" class="fixed inset-0 z-50 flex items-center justify-center bg-rose-950/40 backdrop-blur-sm hidden p-4">
+        <div class="cute-card w-full max-w-lg p-6 sm:p-8 shadow-2xl relative max-h-[90vh] flex flex-col">
+            <button id="closeLetterBtn" class="absolute top-5 right-5 text-rose-400 hover:text-rose-600 w-8 h-8 rounded-full flex items-center justify-center hover:bg-rose-100 transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-rose-200">
+                <div class="flex items-center space-x-3">
+                    <span class="w-10 h-10 rounded-full bg-pastel-softPink text-pastel-deepRose flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-envelope-open-text"></i>
+                    </span>
+                    <h3 class="font-display text-xl font-bold text-pastel-deepRose dark:text-pastel-pink">Our Secret Love Note</h3>
+                </div>
+                <button id="toggleEditLetterBtn" class="text-xs bg-rose-100 dark:bg-pastel-dusk text-rose-600 dark:text-pastel-purple font-bold px-3 py-1.5 rounded-full transition flex items-center space-x-1">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span id="editBtnText">Edit Note</span>
+                </button>
+            </div>
+
+            <!-- Letter Body -->
+            <div class="flex-1 overflow-y-auto p-4 bg-amber-50/80 rounded-2xl border-2 border-dashed border-pink-200 my-2 shadow-inner">
+                <div id="letterViewText" class="font-cute text-2xl text-rose-950 leading-relaxed whitespace-pre-line min-h-[180px]"></div>
+                <textarea id="letterEditText" class="w-full h-56 p-3 font-cute text-2xl text-rose-950 bg-white/90 border-2 border-rose-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-pastel-pink hidden resize-none"></textarea>
+            </div>
+
+            <div class="flex justify-between items-center pt-3">
+                <span class="text-xs text-rose-400 font-semibold"><i class="fa-solid fa-heart text-pastel-pink mr-1"></i>Saved locally</span>
+                <div class="space-x-2">
+                    <button id="saveLetterBtn" class="px-5 py-2 rounded-full bg-pastel-deepRose text-white text-xs font-bold shadow transition hidden">Save Note</button>
+                    <button id="doneLetterBtn" class="px-5 py-2 rounded-full bg-rose-100 text-rose-600 text-xs font-bold transition">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Polaroid Memory Modal -->
+    <div id="memoryModal" class="fixed inset-0 z-50 flex items-center justify-center bg-rose-950/40 backdrop-blur-sm hidden p-4">
+        <div class="cute-card w-full max-w-lg p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button id="closeMemoryBtn" class="absolute top-5 right-5 text-rose-400 hover:text-rose-600 w-8 h-8 rounded-full flex items-center justify-center hover:bg-rose-100 transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div class="flex items-center space-x-3 mb-6">
+                <div class="w-10 h-10 rounded-full bg-pastel-pink/30 text-pastel-deepRose flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-camera"></i>
+                </div>
+                <h3 id="memoryModalTitle" class="font-display text-2xl font-bold text-pastel-deepRose dark:text-pastel-pink">Add Polaroid Memory</h3>
+            </div>
+
+            <form id="memoryForm" class="space-y-4">
+                <input type="hidden" id="memoryId">
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-rose-400 mb-1">Polaroid Photo</label>
+                    <div id="imagePreviewContainer" class="hidden mb-3 relative rounded-2xl overflow-hidden max-h-48 border-2 border-rose-200">
+                        <img id="imagePreview" src="" class="w-full h-48 object-cover">
+                    </div>
+                    <input type="file" id="inputMemoryPhoto" accept="image/*" class="w-full text-xs text-rose-500 file:mr-3 file:py-2.5 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-pastel-pink file:text-white hover:file:bg-pastel-rose transition">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-rose-400 mb-1">Memory Title</label>
+                    <input type="text" id="inputMemoryTitle" required placeholder="e.g., Stargazing Night ✨" class="w-full px-4 py-2.5 rounded-2xl border-2 border-rose-200 focus:outline-none focus:border-pastel-rose bg-white dark:bg-pastel-dusk dark:border-pastel-duskCard text-sm font-semibold">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-rose-400 mb-1">Date of Memory</label>
+                    <input type="date" id="inputMemoryDate" required class="w-full px-4 py-2.5 rounded-2xl border-2 border-rose-200 focus:outline-none focus:border-pastel-rose bg-white dark:bg-pastel-dusk dark:border-pastel-duskCard text-sm font-semibold">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-rose-400 mb-1">Cute Note / Caption</label>
+                    <textarea id="inputMemoryCaption" rows="3" placeholder="Write a short cute caption..." class="w-full px-4 py-2.5 rounded-2xl border-2 border-rose-200 focus:outline-none focus:border-pastel-rose bg-white dark:bg-pastel-dusk dark:border-pastel-duskCard text-sm font-semibold resize-none"></textarea>
+                </div>
+
+                <div class="pt-4 flex justify-end space-x-3">
+                    <button type="button" id="cancelMemoryBtn" class="px-5 py-2.5 rounded-full border-2 border-rose-200 text-rose-500 text-sm font-bold hover:bg-rose-50 transition">Cancel</button>
+                    <button type="submit" class="px-6 py-2.5 rounded-full bg-gradient-to-r from-pastel-pink to-pastel-rose text-white text-sm font-bold shadow-pill hover:scale-105 transition">Save Memory</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Fullscreen Polaroid Lightbox Modal -->
+    <div id="lightboxModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md hidden p-4">
+        <button id="closeLightboxBtn" class="absolute top-6 right-6 text-white/80 hover:text-white w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition z-10">
+            <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+
+        <div class="max-w-md w-full flex flex-col items-center">
+            <div class="polaroid-card w-full transform scale-100 shadow-2xl my-auto">
+                <div class="cute-tape"></div>
+                <div class="w-full aspect-square bg-rose-50 overflow-hidden rounded-lg mb-4">
+                    <img id="lightboxImg" src="" class="w-full h-full object-cover">
+                </div>
+                <div class="text-center px-2">
+                    <h4 id="lightboxTitle" class="font-cute text-3xl font-bold text-rose-950 dark:text-rose-200"></h4>
+                    <p id="lightboxCaption" class="text-xs font-semibold text-gray-600 dark:text-gray-300 mt-2"></p>
+                    <p id="lightboxDate" class="text-[10px] font-bold text-pastel-deepRose mt-3 uppercase tracking-wider"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 cute-card px-5 py-3 shadow-2xl flex items-center space-x-3 transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none">
+        <div id="toastIcon" class="text-pastel-deepRose text-lg">
+            <i class="fa-solid fa-heart"></i>
+        </div>
+        <div id="toastMessage" class="text-sm font-bold text-pastel-deepRose dark:text-pastel-pink"></div>
+    </div>
+
+    <!-- Custom Delete Confirmation Modal -->
+    <div id="deleteConfirmModal" class="fixed inset-0 z-50 flex items-center justify-center bg-rose-950/40 backdrop-blur-sm hidden p-4">
+        <div class="cute-card w-full max-w-sm p-6 text-center shadow-2xl">
+            <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-500 flex items-center justify-center text-xl mx-auto mb-3">
+                <i class="fa-solid fa-trash"></i>
+            </div>
+            <h4 class="font-display text-lg font-bold text-pastel-deepRose dark:text-pastel-pink mb-1">Delete Polaroid?</h4>
+            <p class="text-xs text-rose-400 font-medium mb-6">Are you sure you want to delete this cute memory?</p>
+            <div class="flex justify-center space-x-3">
+                <button id="cancelDeleteBtn" class="px-4 py-2 rounded-full border-2 border-rose-200 text-rose-500 text-xs font-bold hover:bg-rose-50 transition">Cancel</button>
+                <button id="confirmDeleteBtn" class="px-4 py-2 rounded-full bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold shadow transition">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script Logic -->
+    <script>
+        const DEFAULT_SETTINGS = {
+            p1Name: 'Alex',
+            p2Name: 'Maya',
+            startDate: '2022-02-14T18:00',
+            p1Photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+            p2Photo: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80'
+        };
+
+        const DEFAULT_LETTER = `My Sweeteest Maya,
+
+Every single second with you feels like warm sunshine and soft strawberry milk 🍓. Looking at our journey together, my heart overflows with gratitude for all our silly laughs, late-night talks, and cozy moments.
+
+You are my best friend, my safe haven, and my favorite adventure!
+
+I love you more than words can ever say. 💖`;
+
+        const DEFAULT_MEMORIES = [
+            {
+                id: 'mem-1',
+                photoUrl: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&q=80',
+                title: 'Golden Hour Walks 🌅',
+                caption: 'Holding hands and watching the sunset glow.',
+                date: '2022-02-14'
+            },
+            {
+                id: 'mem-2',
+                photoUrl: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80',
+                title: 'Cozy Cafe Dates ☕',
+                caption: 'Warm lattes and endless sweet conversations.',
+                date: '2022-06-18'
+            },
+            {
+                id: 'mem-3',
+                photoUrl: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80',
+                title: 'Summer Picnic 🍓',
+                caption: 'Strawberries, music, and blue skies together.',
+                date: '2023-08-05'
+            }
+        ];
+
+        let appSettings = JSON.parse(localStorage.getItem('timeTogether_settings')) || DEFAULT_SETTINGS;
+        let appLetter = localStorage.getItem('timeTogether_letter') || DEFAULT_LETTER;
+        let appMemories = JSON.parse(localStorage.getItem('timeTogether_memories')) || DEFAULT_MEMORIES;
+        let memoryToDeleteId = null;
+
+        // Canvas Particle Engine
+        const canvas = document.getElementById('heartCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const floatingElements = [];
+        const burstParticles = [];
+
+        class FloatingElement {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = height + 20 + Math.random() * 50;
+                this.size = Math.random() * 12 + 6;
+                this.speedY = Math.random() * 1.0 + 0.4;
+                this.speedX = Math.sin(Math.random() * Math.PI) * 0.4;
+                this.opacity = Math.random() * 0.4 + 0.2;
+                this.swingAngle = Math.random() * Math.PI * 2;
+                this.swingSpeed = Math.random() * 0.02 + 0.01;
+                this.type = Math.random() > 0.3 ? 'heart' : 'bubble';
+                this.color = `hsl(${340 + Math.random() * 25}, 85%, ${75 + Math.random() * 15}%)`;
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.swingAngle += this.swingSpeed;
+                this.x += Math.sin(this.swingAngle) * 0.6;
+
+                if (this.y < -30) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.strokeStyle = this.color;
+                ctx.translate(this.x, this.y);
+
+                if (this.type === 'heart') {
+                    const s = this.size;
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.bezierCurveTo(-s / 2, -s / 2, -s, s / 3, 0, s);
+                    ctx.bezierCurveTo(s, s / 3, s / 2, -s / 2, 0, 0);
+                    ctx.fill();
+                } else {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                }
+
+                ctx.restore();
+            }
+        }
+
+        class TapBurstParticle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 14 + 8;
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 4 + 1.5;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed - 1;
+                this.opacity = 1;
+                this.gravity = 0.06;
+                this.isStar = Math.random() > 0.5;
+                this.color = `hsl(${330 + Math.random() * 40}, 90%, ${65 + Math.random() * 20}%)`;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += this.gravity;
+                this.opacity -= 0.02;
+            }
+
+            draw() {
+                if (this.opacity <= 0) return;
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.translate(this.x, this.y);
+
+                const s = this.size;
+                if (this.isStar) {
+                    ctx.beginPath();
+                    for (let i = 0; i < 5; i++) {
+                        ctx.lineTo(Math.cos((18 + i * 72) * Math.PI / 180) * s, -Math.sin((18 + i * 72) * Math.PI / 180) * s);
+                        ctx.lineTo(Math.cos((54 + i * 72) * Math.PI / 180) * (s/2), -Math.sin((54 + i * 72) * Math.PI / 180) * (s/2));
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                } else {
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.bezierCurveTo(-s / 2, -s / 2, -s, s / 3, 0, s);
+                    ctx.bezierCurveTo(s, s / 3, s / 2, -s / 2, 0, 0);
+                    ctx.fill();
+                }
+
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < 30; i++) {
+            floatingElements.push(new FloatingElement());
+        }
+
+        window.addEventListener('click', (e) => {
+            if (['INPUT', 'TEXTAREA', 'BUTTON', 'A', 'I'].includes(e.target.tagName)) return;
+            for (let i = 0; i < 10; i++) {
+                burstParticles.push(new TapBurstParticle(e.clientX, e.clientY));
+            }
+            playChime(600 + Math.random() * 200);
+        });
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+
+            floatingElements.forEach(el => {
+                el.update();
+                el.draw();
+            });
+
+            for (let i = burstParticles.length - 1; i >= 0; i--) {
+                const p = burstParticles[i];
+                p.update();
+                p.draw();
+                if (p.opacity <= 0) burstParticles.splice(i, 1);
+            }
+
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+        let audioCtx = null;
+        let musicActive = false;
+
+        function playChime(freq = 523.25) {
+            if (!musicActive) return;
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+                gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.4);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.4);
+            } catch(e){}
+        }
+
+        document.getElementById('musicBtn').addEventListener('click', () => {
+            musicActive = !musicActive;
+            const btn = document.getElementById('musicBtn');
+            if (musicActive) {
+                btn.classList.add('bg-pastel-pink', 'text-white');
+                showToast('Cute Ambient Sounds On 🎵');
+                playChime(659.25);
+            } else {
+                btn.classList.remove('bg-pastel-pink', 'text-white');
+                showToast('Sound Muted');
+            }
+        });
+
+        function updateTimer() {
+            const startDate = new Date(appSettings.startDate);
+            const now = new Date();
+
+            if (isNaN(startDate.getTime())) return;
+
+            let diffMs = now - startDate;
+            if (diffMs < 0) diffMs = 0;
+
+            let tempDate = new Date(startDate);
+            let years = now.getFullYear() - tempDate.getFullYear();
+            let months = now.getMonth() - tempDate.getMonth();
+            let days = now.getDate() - tempDate.getDate();
+
+            if (days < 0) {
+                months--;
+                const prevMonthDate = new Date(now.getFullYear(), now.getMonth(), 0);
+                days += prevMonthDate.getDate();
+            }
+
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            const totalSeconds = Math.floor(diffMs / 1000);
+            const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            const totalDaysTogether = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+            document.getElementById('cntYears').textContent = years;
+            document.getElementById('cntMonths').textContent = months;
+            document.getElementById('cntDays').textContent = days;
+            document.getElementById('cntHours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('cntMinutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('cntSeconds').textContent = String(seconds).padStart(2, '0');
+
+            document.getElementById('totalDaysText').textContent = `${totalDaysTogether.toLocaleString()} Days Together ❤️`;
+
+            // Anniversary Progress Calculation
+            const nextAnniversary = new Date(startDate);
+            nextAnniversary.setFullYear(now.getFullYear());
+            if (nextAnniversary < now) {
+                nextAnniversary.setFullYear(now.getFullYear() + 1);
+            }
+
+            const lastAnniversary = new Date(nextAnniversary);
+            lastAnniversary.setFullYear(nextAnniversary.getFullYear() - 1);
+
+            const totalYearMs = nextAnniversary - lastAnniversary;
+            const elapsedMs = now - lastAnniversary;
+            const progressPct = Math.min(100, Math.max(0, (elapsedMs / totalYearMs) * 100));
+
+            const daysToNext = Math.ceil((nextAnniversary - now) / (1000 * 60 * 60 * 24));
+
+            document.getElementById('anniversaryProgressBar').style.width = `${progressPct}%`;
+            document.getElementById('daysToNextAnniversaryText').textContent = `${daysToNext} Days To Anniversary`;
+        }
+
+        setInterval(updateTimer, 1000);
+
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeIcon = document.getElementById('themeIcon');
+
+        themeToggleBtn.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            if (isDark) {
+                themeIcon.className = 'fa-solid fa-sun text-yellow-300';
+                showToast('Soft Dusk Mode');
+            } else {
+                themeIcon.className = 'fa-solid fa-moon text-rose-600';
+                showToast('Strawberry Milk Light Mode');
+            }
+        });
+
+        function renderHeader() {
+            document.getElementById('p1Name').textContent = appSettings.p1Name;
+            document.getElementById('p2Name').textContent = appSettings.p2Name;
+            
+            if (appSettings.p1Photo) document.getElementById('p1Photo').src = appSettings.p1Photo;
+            if (appSettings.p2Photo) document.getElementById('p2Photo').src = appSettings.p2Photo;
+
+            const sDate = new Date(appSettings.startDate);
+            if (!isNaN(sDate.getTime())) {
+                document.getElementById('displayStartDate').textContent = sDate.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+            }
+        }
+
+        const envelopeContainer = document.getElementById('envelopeContainer');
+        const envelopeEl = document.getElementById('envelopeEl');
+        const letterModal = document.getElementById('letterModal');
+        const closeLetterBtn = document.getElementById('closeLetterBtn');
+        const doneLetterBtn = document.getElementById('doneLetterBtn');
+        const letterViewText = document.getElementById('letterViewText');
+        const letterEditText = document.getElementById('letterEditText');
+        const toggleEditLetterBtn = document.getElementById('toggleEditLetterBtn');
+        const saveLetterBtn = document.getElementById('saveLetterBtn');
+        const editBtnText = document.getElementById('editBtnText');
+        const letterPreview = document.getElementById('letterPreview');
+
+        function updateLetterSnippet() {
+            if (appLetter) {
+                letterPreview.textContent = `"${appLetter.substring(0, 55)}..."`;
+            }
+        }
+
+        envelopeContainer.addEventListener('click', () => {
+            envelopeEl.classList.add('open');
+            playChime(783.99);
+            setTimeout(() => {
+                letterViewText.textContent = appLetter;
+                letterEditText.value = appLetter;
+                letterViewText.classList.remove('hidden');
+                letterEditText.classList.add('hidden');
+                saveLetterBtn.classList.add('hidden');
+                editBtnText.textContent = 'Edit Note';
+                letterModal.classList.remove('hidden');
+            }, 500);
+        });
+
+        function closeLetter() {
+            letterModal.classList.add('hidden');
+            envelopeEl.classList.remove('open');
+        }
+
+        closeLetterBtn.addEventListener('click', closeLetter);
+        doneLetterBtn.addEventListener('click', closeLetter);
+
+        toggleEditLetterBtn.addEventListener('click', () => {
+            const isEditing = !letterEditText.classList.contains('hidden');
+            if (isEditing) {
+                letterEditText.classList.add('hidden');
+                letterViewText.classList.remove('hidden');
+                saveLetterBtn.classList.add('hidden');
+                editBtnText.textContent = 'Edit Note';
+            } else {
+                letterEditText.classList.remove('hidden');
+                letterViewText.classList.add('hidden');
+                saveLetterBtn.classList.remove('hidden');
+                editBtnText.textContent = 'Cancel Edit';
+            }
+        });
+
+        saveLetterBtn.addEventListener('click', () => {
+            appLetter = letterEditText.value.trim();
+            localStorage.setItem('timeTogether_letter', appLetter);
+            letterViewText.textContent = appLetter;
+            letterEditText.classList.add('hidden');
+            letterViewText.classList.remove('hidden');
+            saveLetterBtn.classList.add('hidden');
+            editBtnText.textContent = 'Edit Note';
+            updateLetterSnippet();
+            showToast('Secret Love Note Saved 💖');
+        });
+
+        const polaroidGrid = document.getElementById('polaroidGrid');
+        const addMemoryBtn = document.getElementById('addMemoryBtn');
+        const memoryModal = document.getElementById('memoryModal');
+        const closeMemoryBtn = document.getElementById('closeMemoryBtn');
+        const cancelMemoryBtn = document.getElementById('cancelMemoryBtn');
+        const memoryForm = document.getElementById('memoryForm');
+        const inputMemoryPhoto = document.getElementById('inputMemoryPhoto');
+        const imagePreview = document.getElementById('imagePreview');
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+
+        function readFileAsBase64(file, maxWidth = 600) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > maxWidth) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/jpeg', 0.82));
+                    };
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function renderMemories() {
+            polaroidGrid.innerHTML = '';
+            
+            if (appMemories.length === 0) {
+                polaroidGrid.innerHTML = `
+                    <div class="col-span-full text-center py-10 cute-card">
+                        <i class="fa-solid fa-camera-retro text-4xl text-pastel-pink mb-2"></i>
+                        <h3 class="font-display text-base font-bold text-pastel-deepRose">No Polaroids Yet</h3>
+                        <p class="text-xs text-rose-400 mt-1">Click "Add Polaroid" to capture your first memory!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const tilts = ['rotate-1', '-rotate-2', 'rotate-2', '-rotate-1', 'rotate-3', '-rotate-3'];
+
+            appMemories.forEach((mem, idx) => {
+                const tilt = tilts[idx % tilts.length];
+                const card = document.createElement('div');
+                card.className = `polaroid-card ${tilt} cursor-pointer group`;
+
+                const mDate = new Date(mem.date);
+                const dateStr = !isNaN(mDate.getTime()) 
+                    ? mDate.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+                    : mem.date;
+
+                card.innerHTML = `
+                    <div class="cute-tape"></div>
+                    <div class="w-full aspect-square bg-rose-50 overflow-hidden rounded-lg mb-3 relative">
+                        <img src="${mem.photoUrl}" alt="${mem.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="px-1 text-center">
+                        <h3 class="font-cute text-2xl font-bold text-rose-950 dark:text-rose-200 line-clamp-1">${mem.title}</h3>
+                        <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">${mem.caption || ''}</p>
+                        <p class="text-[10px] font-bold text-pastel-deepRose mt-2 uppercase tracking-wider">${dateStr}</p>
+                    </div>
+                    <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex space-x-1 bg-white/90 dark:bg-pastel-dusk rounded-full p-1 shadow-md z-10">
+                        <button onclick="event.stopPropagation(); editMemory('${mem.id}')" class="p-1.5 text-pastel-rose hover:text-pastel-deepRose text-xs" title="Edit">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="event.stopPropagation(); promptDeleteMemory('${mem.id}')" class="p-1.5 text-pastel-rose hover:text-pastel-deepRose text-xs" title="Delete">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+
+                card.addEventListener('click', () => openLightbox(mem));
+                polaroidGrid.appendChild(card);
+            });
+        }
+
+        const lightboxModal = document.getElementById('lightboxModal');
+        const closeLightboxBtn = document.getElementById('closeLightboxBtn');
+
+        function openLightbox(mem) {
+            document.getElementById('lightboxImg').src = mem.photoUrl;
+            document.getElementById('lightboxTitle').textContent = mem.title;
+            document.getElementById('lightboxCaption').textContent = mem.caption || '';
+            const mDate = new Date(mem.date);
+            document.getElementById('lightboxDate').textContent = !isNaN(mDate.getTime()) 
+                ? mDate.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
+                : mem.date;
+
+            lightboxModal.classList.remove('hidden');
+        }
+
+        closeLightboxBtn.addEventListener('click', () => lightboxModal.classList.add('hidden'));
+
+        addMemoryBtn.addEventListener('click', () => {
+            document.getElementById('memoryModalTitle').textContent = 'Add Polaroid Memory';
+            document.getElementById('inputMemoryDate').value = new Date().toISOString().split('T')[0];
+            memoryModal.classList.remove('hidden');
+        });
+
+        function closeMemoryModal() {
+            memoryModal.classList.add('hidden');
+            memoryForm.reset();
+            document.getElementById('memoryId').value = '';
+            imagePreviewContainer.classList.add('hidden');
+        }
+
+        closeMemoryBtn.addEventListener('click', closeMemoryModal);
+        cancelMemoryBtn.addEventListener('click', closeMemoryModal);
+
+        inputMemoryPhoto.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const base64 = await readFileAsBase64(file, 800);
+                imagePreview.src = base64;
+                imagePreviewContainer.classList.remove('hidden');
+            }
+        });
+
+        memoryForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const memId = document.getElementById('memoryId').value;
+            const title = document.getElementById('inputMemoryTitle').value.trim();
+            const date = document.getElementById('inputMemoryDate').value;
+            const caption = document.getElementById('inputMemoryCaption').value.trim();
+            const photoFile = inputMemoryPhoto.files[0];
+
+            let photoUrl = imagePreview.src;
+            if (photoFile) photoUrl = await readFileAsBase64(photoFile, 800);
+
+            if (!photoUrl || photoUrl === window.location.href) {
+                showToast('Please attach a photo');
+                return;
+            }
+
+            if (memId) {
+                const idx = appMemories.findIndex(m => m.id === memId);
+                if (idx !== -1) appMemories[idx] = { id: memId, title, date, caption, photoUrl };
+                showToast('Memory Updated ✨');
+            } else {
+                appMemories.unshift({ id: 'mem-' + Date.now(), title, date, caption, photoUrl });
+                showToast('New Memory Added 📸');
+            }
+
+            localStorage.setItem('timeTogether_memories', JSON.stringify(appMemories));
+            renderMemories();
+            closeMemoryModal();
+        });
+
+        window.editMemory = function(id) {
+            const mem = appMemories.find(m => m.id === id);
+            if (!mem) return;
+
+            document.getElementById('memoryId').value = mem.id;
+            document.getElementById('inputMemoryTitle').value = mem.title;
+            document.getElementById('inputMemoryDate').value = mem.date;
+            document.getElementById('inputMemoryCaption').value = mem.caption || '';
+            imagePreview.src = mem.photoUrl;
+            imagePreviewContainer.classList.remove('hidden');
+
+            document.getElementById('memoryModalTitle').textContent = 'Edit Polaroid Memory';
+            memoryModal.classList.remove('hidden');
+        };
+
+        const deleteConfirmModal = document.getElementById('deleteConfirmModal');
+        window.promptDeleteMemory = function(id) {
+            memoryToDeleteId = id;
+            deleteConfirmModal.classList.remove('hidden');
+        };
+
+        document.getElementById('cancelDeleteBtn').addEventListener('click', () => {
+            deleteConfirmModal.classList.add('hidden');
+            memoryToDeleteId = null;
+        });
+
+        document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+            if (memoryToDeleteId) {
+                appMemories = appMemories.filter(m => m.id !== memoryToDeleteId);
+                localStorage.setItem('timeTogether_memories', JSON.stringify(appMemories));
+                renderMemories();
+                showToast('Polaroid Deleted');
+            }
+            deleteConfirmModal.classList.add('hidden');
+            memoryToDeleteId = null;
+        });
+
+        const settingsModal = document.getElementById('settingsModal');
+        document.getElementById('openSettingsBtn').addEventListener('click', () => {
+            document.getElementById('inputP1Name').value = appSettings.p1Name;
+            document.getElementById('inputP2Name').value = appSettings.p2Name;
+            document.getElementById('inputStartDate').value = appSettings.startDate;
+            settingsModal.classList.remove('hidden');
+        });
+
+        function closeSettings() { settingsModal.classList.add('hidden'); }
+        document.getElementById('closeSettingsBtn').addEventListener('click', closeSettings);
+        document.getElementById('cancelSettingsBtn').addEventListener('click', closeSettings);
+
+        document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            appSettings.p1Name = document.getElementById('inputP1Name').value.trim();
+            appSettings.p2Name = document.getElementById('inputP2Name').value.trim();
+            appSettings.startDate = document.getElementById('inputStartDate').value;
+
+            const p1File = document.getElementById('inputP1File').files[0];
+            if (p1File) appSettings.p1Photo = await readFileAsBase64(p1File, 300);
+
+            const p2File = document.getElementById('inputP2File').files[0];
+            if (p2File) appSettings.p2Photo = await readFileAsBase64(p2File, 300);
+
+            localStorage.setItem('timeTogether_settings', JSON.stringify(appSettings));
+            renderHeader();
+            updateTimer();
+            closeSettings();
+            showToast('Couple Settings Saved 🍓');
+        });
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = msg;
+
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 2500);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderHeader();
+            updateTimer();
+            renderMemories();
+            updateLetterSnippet();
+        });
+    </script>
+</body>
+</html>

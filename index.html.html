@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="bn" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>কবে খোলা (Kobe Khola) - Dhaka Market Status & Zone Holiday Finder</title>
+    
+    <!-- Google Fonts: Hind Siliguri for Bengali & Inter for English -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Hind Siliguri"', 'Inter', 'sans-serif'],
+                        en: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            900: '#064e3b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Smooth transition animations */
+        .card-transition {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-transition:hover {
+            transform: translateY(-2px);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col font-sans text-slate-800 antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-3">
+                <!-- Logo & Branding -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-md shadow-emerald-200">
+                        <i data-lucide="clock" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-xl sm:text-2xl text-slate-900 tracking-tight leading-none">কবে খোলা</span>
+                            <span class="hidden sm:inline-block text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold border border-emerald-200">ঢাকা জোন</span>
+                        </div>
+                        <p class="text-xs text-slate-500 font-en hidden sm:block">Dhaka Real-time Market & Zone Holiday Engine</p>
+                    </div>
+                </div>
+
+                <!-- Clock & Navigation Switchers -->
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <!-- Live Dhaka Clock Badge -->
+                    <div id="liveClockDisplay" class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-200 text-xs font-en text-slate-700">
+                        <i data-lucide="clock-3" class="w-3.5 h-3.5 text-emerald-600 animate-pulse"></i>
+                        <span id="currentTimeText" class="font-semibold">Loading...</span>
+                    </div>
+
+                    <!-- Navigation Tabs -->
+                    <nav class="flex items-center p-1 bg-slate-100 rounded-xl border border-slate-200 text-xs sm:text-sm font-medium">
+                        <button id="tabMarketsBtn" onclick="switchTab('markets')" class="px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-sm font-semibold flex items-center gap-1.5 transition-all">
+                            <i data-lucide="store" class="w-4 h-4 text-emerald-600"></i>
+                            <span>মার্কেটসমূহ</span>
+                        </button>
+                        <button id="tabZonesBtn" onclick="switchTab('zones')" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition-all">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-slate-500"></i>
+                            <span>৭টি জোন লিস্ট</span>
+                        </button>
+                    </nav>
+
+                    <!-- Add Place / Correction Button -->
+                    <button onclick="openCorrectionModal()" class="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-medium flex items-center gap-1.5 transition-all shadow-sm">
+                        <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-400"></i>
+                        <span class="hidden sm:inline">নতুন স্থান যোগ</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Time Travel / Simulator Banner -->
+    <div id="timeSimulatorBar" class="bg-amber-50 border-b border-amber-200/80 py-2.5 px-4 text-xs sm:text-sm">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+            <div class="flex items-center gap-2 text-amber-900 font-medium text-center sm:text-left">
+                <i data-lucide="sparkles" class="w-4 h-4 text-amber-600 shrink-0"></i>
+                <span id="simulatedTimeDescription">বর্তমানে <strong class="text-amber-950 font-semibold">লাইভ সময়</strong> দেখা হচ্ছে। অন্য কোনো দিন/সময়ের তথ্য দেখতে সময় পরিবর্তন করুন:</span>
+            </div>
+            
+            <!-- Preset Quick Simulator Controls -->
+            <div class="flex items-center gap-1.5 flex-wrap justify-center">
+                <button onclick="setSimulatedTime('now')" class="px-2.5 py-1 rounded-md bg-amber-200/60 hover:bg-amber-200 text-amber-900 font-semibold text-xs border border-amber-300 transition-all">এখন (Live)</button>
+                <button onclick="setSimulatedTime('tomorrow_3pm')" class="px-2.5 py-1 rounded-md bg-white hover:bg-amber-100 text-amber-900 text-xs border border-amber-200 transition-all">আগামীকাল ৩ PM</button>
+                <button onclick="setSimulatedTime('friday_11am')" class="px-2.5 py-1 rounded-md bg-white hover:bg-amber-100 text-amber-900 text-xs border border-amber-200 transition-all">শুক্রবার ১১ AM</button>
+                <button onclick="setSimulatedTime('tuesday_4pm')" class="px-2.5 py-1 rounded-md bg-white hover:bg-amber-100 text-amber-900 text-xs border border-amber-200 transition-all">মঙ্গলবার ৪ PM</button>
+                
+                <!-- Custom DateTime Input -->
+                <input type="datetime-local" id="customSimulatedInput" onchange="handleCustomTimeChange(this.value)" class="px-2 py-0.5 rounded-md border border-amber-300 bg-white text-xs text-amber-900 focus:outline-none focus:ring-1 focus:ring-amber-500">
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- VIEW 1: MARKETS FINDER TAB -->
+        <section id="marketsView" class="space-y-6">
+            
+            <!-- Hero Search & Filter Section -->
+            <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+                <!-- Background visual element -->
+                <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="max-w-3xl space-y-4">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold border border-emerald-500/30">
+                        <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+                        <span>ঢাকা উত্তর ও দক্ষিণ সিটি কর্পোরেশন সাপ্তাহিক বন্ধ গাইড</span>
+                    </div>
+
+                    <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+                        আজ কি মার্কেট খোলা? নাকি বন্ধ?
+                    </h1>
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                        মার্কেটের নাম, এলাকা (যেমন: ধানমন্ডি, উত্তরা, অল্ড ঢাকা, মিরপুর, বাড্ডা) অথবা জোনের নাম দিয়ে তাত্ক্ষণিক সার্চ করুন।
+                    </p>
+
+                    <!-- Main Search Input -->
+                    <div class="relative pt-2">
+                        <div class="absolute inset-y-0 left-0 pl-4 pt-2 flex items-center pointer-events-none text-slate-400">
+                            <i data-lucide="search" class="w-5 h-5"></i>
+                        </div>
+                        <input
+                            type="text"
+                            id="searchInput"
+                            oninput="renderMarkets()"
+                            placeholder="যেমন: বসুন্ধরা সিটি, Jamuna, New Market, উত্তরা, IDB, ব্যাংক..."
+                            class="w-full pl-11 pr-24 py-3.5 sm:py-4 rounded-2xl bg-white text-slate-900 placeholder-slate-400 font-medium text-base sm:text-lg focus:outline-none focus:ring-4 focus:ring-emerald-500/40 shadow-lg border-0"
+                        >
+                        <button 
+                            onclick="clearSearch()"
+                            id="clearSearchBtn"
+                            class="hidden absolute right-3 top-5 sm:top-5.5 px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold transition-all"
+                        >
+                            মুছে ফেলুন
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Counters Bar -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-6 border-t border-slate-700/60 text-xs sm:text-sm">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-3 h-3 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50"></div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">এখন খোলা</span>
+                            <strong id="statOpenCount" class="text-lg font-bold text-white">0</strong>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-3 h-3 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"></div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">একটু পর বন্ধ</span>
+                            <strong id="statClosingSoonCount" class="text-lg font-bold text-white">0</strong>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-3 h-3 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50"></div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">আজ পূর্ণ বন্ধ</span>
+                            <strong id="statClosedTodayCount" class="text-lg font-bold text-white">0</strong>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-3 h-3 rounded-full bg-blue-400 shadow-sm shadow-blue-400/50"></div>
+                        <div>
+                            <span class="text-slate-400 block text-[11px]">২৪/৭ জরুরি সেবা</span>
+                            <strong id="stat247Count" class="text-lg font-bold text-white">0</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Filter Pills & Toggle Row -->
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm">
+                <!-- Category Pills -->
+                <div class="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-none" id="categoryPillsContainer">
+                    <!-- Dynamic rendering via JS -->
+                </div>
+
+                <!-- Zone Filter & Status Filter Controls -->
+                <div class="flex items-center gap-2 w-full md:w-auto justify-between md:justify-end shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
+                    <!-- Zone Selector Dropdown -->
+                    <select id="zoneSelectFilter" onchange="renderMarkets()" class="px-3 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <option value="all">সকল জোন (Zone 1 - 7)</option>
+                        <option value="1">জোন ১ (পুরান ঢাকা, সদরঘাট)</option>
+                        <option value="2">জোন ২ (রামপুরা, খিলগাঁও, মালিবাগ)</option>
+                        <option value="3">জোন ৩ (বেইলি রোড, মৌচাক, মতিঝিল)</option>
+                        <option value="4">জোন ৪ (ধানমন্ডি, এলিফ্যান্ট রোড, নিউ মার্কেট)</option>
+                        <option value="5">জোন ৫ (মিরপুর ১-২, মোহাম্মদপুর)</option>
+                        <option value="6">জোন ৬ (গুলশান, বনানী, মিরপুর ১০-১৪, আইডিবি)</option>
+                        <option value="7">জোন ৭ (উত্তরা, বাড্ডা, বসুন্ধরা আ/এ)</option>
+                    </select>
+
+                    <!-- Open Only Toggle -->
+                    <label class="inline-flex items-center gap-2 cursor-pointer select-none px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-all">
+                        <input type="checkbox" id="openOnlyToggle" onchange="renderMarkets()" class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300">
+                        <span>শুধু খোলা স্থান</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Places Grid -->
+            <div id="marketsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Dynamically populated cards -->
+            </div>
+
+            <!-- Empty Search State -->
+            <div id="emptySearchState" class="hidden text-center py-16 px-4 bg-white rounded-3xl border border-dashed border-slate-300">
+                <div class="w-16 h-16 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="search-x" class="w-8 h-8"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800">কোনো তথ্য পাওয়া যায়নি</h3>
+                <p class="text-sm text-slate-500 mt-1 max-w-md mx-auto">
+                    আপনার সার্চ শব্দের সাথে কোনো মার্কেটের তথ্য মেলেনি। বানান চেক করুন অথবা ফিল্টার রিসেট করুন।
+                </p>
+                <button onclick="resetAllFilters()" class="mt-4 px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-semibold hover:bg-slate-800 transition-all">
+                    সকল ফিল্টার রিসেট করুন
+                </button>
+            </div>
+        </section>
+
+        <!-- VIEW 2: ZONE OFF-DAY MAP & GUIDE TAB -->
+        <section id="zonesView" class="hidden space-y-6">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6">
+                <div>
+                    <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-semibold border border-emerald-200">
+                        ঢাকা দুই সিটি কর্পোরেশন
+                    </span>
+                    <h2 class="text-2xl font-bold text-slate-900 mt-2">ঢাকার ৭টি এলাকার সাপ্তাহিক ছুটির তালিকা</h2>
+                    <p class="text-slate-500 text-sm mt-1">
+                        কোথাও বের হওয়ার আগে আপনার গন্তব্যের এলাকাটি কোন জোনের অধীনে এবং কবে বন্ধ থাকে জেনে নিন।
+                    </p>
+                </div>
+
+                <!-- Zone Grid Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="zoneGuideCards">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL: ADD / REQUEST CORRECTION -->
+    <div id="correctionModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-5 relative animate-in fade-in zoom-in duration-200">
+            <button onclick="closeCorrectionModal()" class="absolute top-5 right-5 p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 transition-all">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                    <i data-lucide="edit-3" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900">তথ্য হালনাগাদ বা নতুন স্থান যোগ</h3>
+                    <p class="text-xs text-slate-500">কোনো মার্কেটের সময়সূচী পরিবর্তিত হলে আমাদের জানান</p>
+                </div>
+            </div>
+
+            <form id="correctionForm" onsubmit="handleCorrectionSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">স্থানের নাম (বাংলা/English)</label>
+                    <input type="text" required id="formPlaceName" placeholder="যেমন: ধানমন্ডি প্লাজা বা Bashundhara" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">এলাকা / জোন</label>
+                        <input type="text" required id="formArea" placeholder="যেমন: ধানমন্ডি, জোন ৪" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">পূর্ণ সাপ্তাহিক বন্ধ</label>
+                        <select id="formFullHoliday" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            <option value="Sunday">রবিবার (Sunday)</option>
+                            <option value="Monday">সোমবার (Monday)</option>
+                            <option value="Tuesday">মঙ্গলবার (Tuesday)</option>
+                            <option value="Wednesday">বুধবার (Wednesday)</option>
+                            <option value="Thursday">বৃহস্পতিবার (Thursday)</option>
+                            <option value="Friday">শুক্রবার (Friday)</option>
+                            <option value="Saturday">শনিবার (Saturday)</option>
+                            <option value="None">কোনো ছুটির দিন নেই</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">আপনার মন্তব্য বা সঠিক সময়সূচী</label>
+                    <textarea id="formNotes" rows="3" placeholder="যেমন: বর্তমানে রমজান উপলক্ষ্যে রাত ১০টা পর্যন্ত খোলা থাকে..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+                </div>
+
+                <div class="pt-2 flex justify-end gap-2">
+                    <button type="button" onclick="closeCorrectionModal()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all">বাতিল</button>
+                    <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-200 transition-all">জমা দিন</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast Element -->
+    <div id="toastNotification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl border border-slate-700 flex items-center gap-3 text-sm">
+            <i id="toastIcon" data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i>
+            <span id="toastMessage">অপারেশন সফল হয়েছে!</span>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-8 mt-12 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p class="font-medium text-slate-700">কবে খোলা (Kobe Khola) © 2026 — ঢাকা রিয়েল-টাইম মার্কেট ও ছুটি ফাইন্ডার</p>
+            <p>তথ্যসূত্র: ঢাকা উত্তর ও দক্ষিণ সিটি কর্পোরেশন সাপ্তাহিক সরকারি বাজার ছুটির প্রজ্ঞাপন।</p>
+        </div>
+    </footer>
+
+    <script>
+        /* ==========================================================================
+           1. DATASET: 20+ PROMINENT DHAKA LOCATIONS
+           ========================================================================== */
+        const locationsData = [
+            {
+                id: "bashundhara-city",
+                name: "Bashundhara City Shopping Complex",
+                bnName: "বসুন্ধরা সিটি শপিং মল",
+                zone: 4,
+                category: "mall",
+                categoryBn: "শপিং মল",
+                area: "পান্থপথ, ধানমন্ডি",
+                fullHoliday: "Tuesday",
+                fullHolidayBn: "মঙ্গলবার",
+                halfHoliday: "Wednesday",
+                halfHolidayBn: "বুধবার",
+                openTime: "10:00",
+                closeTime: "20:00",
+                halfDayCloseTime: "14:00",
+                address: "Panthapath, Dhaka 1205",
+                googleMapsUrl: "https://maps.google.com/?q=Bashundhara+City+Shopping+Complex"
+            },
+            {
+                id: "jamuna-future-park",
+                name: "Jamuna Future Park",
+                bnName: "যমুনা ফিউচার পার্ক",
+                zone: 7,
+                category: "mall",
+                categoryBn: "শপিং মল",
+                area: "কুরিল, প্রগতি সরণি, বাড্ডা",
+                fullHoliday: "Wednesday",
+                fullHolidayBn: "বুধবার",
+                halfHoliday: "Thursday",
+                halfHolidayBn: "বৃহস্পতিবার",
+                openTime: "11:00",
+                closeTime: "21:00",
+                halfDayCloseTime: "14:00",
+                address: "KA-244, Pragati Sarani, Kuril, Dhaka",
+                googleMapsUrl: "https://maps.google.com/?q=Jamuna+Future+Park"
+            },
+            {
+                id: "dhaka-new-market",
+                name: "Dhaka New Market & Gausia",
+                bnName: "ঢাকা নিউ মার্কেট ও গাউছিয়া",
+                zone: 4,
+                category: "mall",
+                categoryBn: "শপিং মল",
+                area: "মিরপুর রোড, আজিমপুর",
+                fullHoliday: "Tuesday",
+                fullHolidayBn: "মঙ্গলবার",
+                halfHoliday: "Wednesday",
+                halfHolidayBn: "বুধবার",
+                openTime: "10:00",
+                closeTime: "20:30",
+                halfDayCloseTime: "14:00",
+                address: "Mirpur Rd, New Market, Dhaka 1205",
+                googleMapsUrl: "https://maps.google.com/?q=Dhaka+New+Market"
+            },
+            {
+                id: "bcs-computer-city",
+                name: "BCS Computer City (IDB Bhaban)",
+                bnName: "বিসিএস কম্পিউটার সিটি (আইডিবি)",
+                zone: 6,
+                category: "tech",
+                categoryBn: "কম্পিউটার ও টেক",
+                area: "আগারগাঁও, শেরেবাংলা নগর",
+                fullHoliday: "Sunday",
+                fullHolidayBn: "রবিবার",
+                halfHoliday: "Monday",
+                halfHolidayBn: "সোমবার",
+                openTime: "10:00",
+                closeTime: "20:00",
+                halfDayCloseTime: "14:00",
+                address: "E/8-A, Rokeya Sarani, Agargaon, Dhaka",
+                googleMapsUrl: "https://maps.google.com/?q=BCS+Computer+City"
+            },
+            {
+                id: "multiplan-center",
+                name: "Multiplan Center (Computer City)",
+                bnName: "মাল্টিপ্ল্যান সেন্টার (এলিফ্যান্ট রোড)",
+                zone: 4,
+                category: "tech",
+                categoryBn: "কম্পিউটার ও টেক",
+                area: "এলিফ্যান্ট রোড, ধানমন্ডি",
+                fullHoliday: "Tuesday",
+                fullHolidayBn: "মঙ্গলবার",
+                halfHoliday: "Wednesday",
+                halfHolidayBn: "বুধবার",
+                openTime: "10:00",
+                closeTime: "20:00",
+                halfDayCloseTime: "14:00",
+                address: "69-71, New Elephant Road, Dhaka 1205",
+                googleMapsUrl: "https://maps.google.com/?q=Multiplan+Center"
+            },
+            {
+                id: "shimanto-square",
+                name: "Shimanto Square & Rapa Plaza",
+                bnName: "সীমান্ত স্কয়ার ও রাপা প্লাজা",
+                zone: 4,
+                category: "mall",
+                categoryBn: "শপিং মল",
+                area: "ধানমন্ডি ২ / ২৭ নম্বর রোড",
+                fullHoliday: "Tuesday",
+                fullHolidayBn: "মঙ্গলবার",
+                halfHoliday: "Wednesday",
+                halfHolidayBn: "বুধবার",
+                openTime: "10:30",
+                closeTime: "20:30",
+                halfDayCloseTime: "14:00",
+                address: "Road 2, Dhanmondi, Dhaka 1205",
+                googleMapsUrl: "https://maps.google.com/?q=Shimanto+Square"
+            },
+            {
+                id: "mouchak-market",
+                name: "Mouchak Market & Karnaphuli Garden City",
+                bnName: "মৌচাক মার্কেট ও কর্ণফুলী গার্ডেন সিটি",
+                zone: 3,
+                category: "mall",
+                categoryBn: "শপিং মল",
+                area: "মালিবাগ, বেইলি রোড, কাকরাইল",
+                fullHoliday: "Thursday",
+                fullHolidayBn: "বৃহস্পতিবার",
+                halfHoliday: "Friday",
+                halfHolidayBn: "শুক্রবার",
+                openTime: "10:00",
+                closeTime: "20:00",
+                halfDayCloseTime: "14:00",
+                address: "Malibagh, Dhaka 1217",
+                googleMapsUrl: "https://maps.google.com/?q=Mouchak+Market"
+            },
+            {
+                id: "eastern-plus",
+                name: "Eastern Plus & Fortune Shopping Mall",
+                bnName: "ইস্টার্ন প্লাস ও ফরচুন শপিং মল",
+                zone: 3,
+                category: "mall",
+                categoryBn: "শপিং মল",
+                area: "শান্তিনগর, পল্টন",
+                fullHoliday: "Thursday",
+                fullHolidayBn: "বৃহস্পতিবার",
+                halfHoliday: "Friday",
+                halfHolidayBn: "শুক্রবার",
+                openTime: "10:00",
+                closeTime: "20:00",
+                halfDayCloseTime: "14:00",
+                address: "Shantinagar Rd, Dhaka 1217",
+                googleMapsUrl: "https://maps.google.com/?q=Eastern+Plus+Shopping+Complex"
+            },
+            {
+                id: "rajlakshmi-complex",
+                name: "Rajlakshmi Complex & Mascot Plaza",
+                bnName: "রাজলক্ষ্মী কমপ্লেক্স ও মাসকট প্লাজা",
+                zone: 7,
+                category: "mall",
+                categoryBn: "শপিং মল",
+                area: "উত্তরা ৩ ও ৯ নম্বর সেক্টর",
+                fullHoliday: "Wednesday",
+                fullHolidayBn: "বুধবার",
+                halfHoliday: "Thursday",
+                halfHolidayBn: "বৃহস্পতিবার",
+                openTime: "10:00",
+                closeTime: "20:30",
+                halfDayCloseTime: "14:00",
+                address: "Sector 3, Uttara, Dhaka 1230",
+                googleMapsUrl: "https://maps.google.com/?q=Rajlakshmi+Complex+Uttara"
+            },
+            {
+                id: "suvastu-nazar-valley",
+                name: "Suvastu Nazar Valley",
+                bnName: "সুবাস্তু নজর ভ্যালি",
+                zone: 7,
+                category: "mall",
+                categoryBn: "শপিং মল",
+                area: "মধ্য বাড্ডা, প্রগতি সরণি",
+                fullHoliday: "Wednesday",
+                fullHolidayBn: "বুধবার",
+                halfHoliday: "Thursday",
+                halfHolidayBn: "বৃহস্পতিবার",
+                openTime: "10:00",
+                closeTime: "20:00",
+                halfDayCloseTime: "14:00",
+                address: "Middle Badda, Pragati Sarani, Dhaka",
+                googleMapsUrl: "https://maps.google.com/?q=Suvastu+Nazar+Valley"
+            },
+            {
+                id: "islampur-market",
+                name: "Islampur Cloth Market & Sadarghat",
+                bnName: "ইসলামপুর কাপড়ের মার্কেট ও সদরঘাট",
+                zone: 1,
+                category: "bazaar",
+                categoryBn: "কাঁচাবাজার ও পাইকারি",
+                area: "পুরান ঢাকা, সদরঘাট",
+                fullHoliday: "Friday",
+                fullHolidayBn: "শুক্রবার",
+                halfHoliday: "Saturday",
+                halfHolidayBn: "শনিবার",
+                openTime: "09:00",
+                closeTime: "19:00",
+                halfDayCloseTime: "14:00",
+                address: "Islampur Rd, Old Dhaka",
+                googleMapsUrl: "https://maps.google.com/?q=Islampur+Market+Dhaka"
+            },
+            {
+                id: "kawran-bazar-fresh",
+                name: "Kawran Bazar Kitchen Market",
+                bnName: "কারওয়ান বাজার কাঁচাবাজার",
+                zone: 4,
+                category: "bazaar",
+                categoryBn: "কাঁচাবাজার ও পাইকারি",
+                area: "কারওয়ান বাজার, তেজগাঁও",
+                fullHoliday: "None",
+                fullHolidayBn: "সাপ্তাহিক বন্ধ নেই (প্রতিদিন খোলা)",
+                halfHoliday: "None",
+                halfHolidayBn: "নাই",
+                openTime: "04:00",
+                closeTime: "23:00",
+                halfDayCloseTime: "23:00",
+                address: "Kawran Bazar, Dhaka 1215",
+                googleMapsUrl: "https://maps.google.com/?q=Kawran+Bazar"
+            },
+            {
+                id: "mohammadpur-town-hall",
+                name: "Mohammadpur Town Hall Market",
+                bnName: "মোহাম্মদপুর টাউন হল মার্কেট",
+                zone: 5,
+                category: "bazaar",
+                categoryBn: "কাঁচাবাজার ও পাইকারি",
+                area: "মোহাম্মদপুর, আসাদ এভিনিউ",
+                fullHoliday: "Thursday",
+                fullHolidayBn: "বৃহস্পতিবার",
+                halfHoliday: "Friday",
+                halfHolidayBn: "শুক্রবার",
+                openTime: "08:00",
+                closeTime: "20:00",
+                halfDayCloseTime: "14:00",
+                address: "Asad Ave, Mohammadpur, Dhaka 1207",
+                googleMapsUrl: "https://maps.google.com/?q=Mohammadpur+Town+Hall"
+            },
+            {
+                id: "bangladesh-bank",
+                name: "Bangladesh Bank Head Office & Commercial Banks",
+                bnName: "বাংলাদেশ ব্যাংক ও মতিঝিল ব্যাংকসমূহ",
+                zone: 3,
+                category: "bank",
+                categoryBn: "ব্যাংক ও সরকারি",
+                area: "মতিঝিল বাণিজ্যিক এলাকা",
+                fullHoliday: "Friday",
+                fullHolidayBn: "শুক্রবার ও শনিবার (দ্বিসাপ্তাহিক)",
+                additionalFullHoliday: "Saturday",
+                halfHoliday: "None",
+                halfHolidayBn: "নাই",
+                openTime: "09:00",
+                closeTime: "17:00",
+                halfDayCloseTime: "17:00",
+                address: "Motijheel C/A, Dhaka 1000",
+                googleMapsUrl: "https://maps.google.com/?q=Bangladesh+Bank"
+            },
+            {
+                id: "national-museum",
+                name: "Bangladesh National Museum",
+                bnName: "বাংলাদেশ জাতীয় জাদুঘর",
+                zone: 4,
+                category: "bank",
+                categoryBn: "ব্যাংক ও সরকারি",
+                area: "শাহবাগ, ঢাকা বিশ্ববিদ্যালয়",
+                fullHoliday: "Thursday",
+                fullHolidayBn: "বৃহস্পতিবার",
+                halfHoliday: "None",
+                halfHolidayBn: "নাই",
+                openTime: "10:30",
+                closeTime: "17:30",
+                halfDayCloseTime: "17:30",
+                address: "Shahbagh, Dhaka 1000",
+                googleMapsUrl: "https://maps.google.com/?q=Bangladesh+National+Museum"
+            },
+            {
+                id: "national-zoo",
+                name: "Bangladesh National Zoo (Mirpur Zoo)",
+                bnName: "জাতীয় চিড়িয়াখানা (মিরপুর)",
+                zone: 5,
+                category: "bank",
+                categoryBn: "ব্যাংক ও সরকারি",
+                area: "মিরপুর ১",
+                fullHoliday: "Sunday",
+                fullHolidayBn: "রবিবার",
+                halfHoliday: "None",
+                halfHolidayBn: "নাই",
+                openTime: "09:00",
+                closeTime: "18:00",
+                halfDayCloseTime: "18:00",
+                address: "Mirpur 1, Dhaka 1216",
+                googleMapsUrl: "https://maps.google.com/?q=Bangladesh+National+Zoo"
+            },
+            {
+                id: "square-hospital-pharmacy",
+                name: "Square Hospital 24/7 Pharmacy",
+                bnName: "স্কয়ার হাসপাতাল ফার্মেসি",
+                zone: 4,
+                category: "emergency",
+                categoryBn: "২৪/৭ জরুরি সেবা",
+                area: "পান্থপথ, ধানমন্ডি",
+                is247: true,
+                fullHoliday: "None",
+                fullHolidayBn: "২৪ ঘণ্টা খোলা (ছুটি নেই)",
+                halfHoliday: "None",
+                halfHolidayBn: "নাই",
+                openTime: "00:00",
+                closeTime: "23:59",
+                halfDayCloseTime: "23:59",
+                address: "18/F, Bir Uttam Qazi Nuruzzaman Sarak, West Panthapath, Dhaka",
+                googleMapsUrl: "https://maps.google.com/?q=Square+Hospital+Dhaka"
+            },
+            {
+                id: "labaid-pharmacy",
+                name: "Labaid Diagnostic & Emergency Pharmacy",
+                bnName: "ল্যাবএইড ডায়াগনস্টিক ও ২৪/৭ ফার্মেসি",
+                zone: 4,
+                category: "emergency",
+                categoryBn: "২৪/৭ জরুরি সেবা",
+                area: "ধানমন্ডি ৬, মিরপুর রোড",
+                is247: true,
+                fullHoliday: "None",
+                fullHolidayBn: "২৪ ঘণ্টা খোলা (ছুটি নেই)",
+                halfHoliday: "None",
+                halfHolidayBn: "নাই",
+                openTime: "00:00",
+                closeTime: "23:59",
+                halfDayCloseTime: "23:59",
+                address: "House 1, Road 4, Dhanmondi, Dhaka",
+                googleMapsUrl: "https://maps.google.com/?q=Labaid+Diagnostic+Dhanmondi"
+            },
+            {
+                id: "police-plaza",
+                name: "Police Plaza Concord Shopping Mall",
+                bnName: "পুলিশ প্লাজা কনকর্ড",
+                zone: 6,
+                category: "mall",
+                categoryBn: "শপিং মল",
+                area: "গুলশান ১, হাতিরঝিল লিংক রোড",
+                fullHoliday: "Sunday",
+                fullHolidayBn: "রবিবার",
+                halfHoliday: "Monday",
+                halfHolidayBn: "সোমবার",
+                openTime: "10:00",
+                closeTime: "20:00",
+                halfDayCloseTime: "14:00",
+                address: "Plot 2, Road 144, Gulshan 1, Dhaka",
+                googleMapsUrl: "https://maps.google.com/?q=Police+Plaza+Concord"
+            },
+            {
+                id: "shyamoli-square",
+                name: "Shyamoli Square Shopping Mall",
+                bnName: "শ্যামলী স্কয়ার শপিং মল",
+                zone: 5,
+                category: "mall",
+                categoryBn: "শপিং মল",
+                area: "শ্যামলী, মিরপুর রোড",
+                fullHoliday: "Thursday",
+                fullHolidayBn: "বৃহস্পতিবার",
+                halfHoliday: "Friday",
+                halfHolidayBn: "শুক্রবার",
+                openTime: "10:00",
+                closeTime: "20:00",
+                halfDayCloseTime: "14:00",
+                address: "Mirpur Rd, Shyamoli, Dhaka",
+                googleMapsUrl: "https://maps.google.com/?q=Shyamoli+Square"
+            }
+        ];
+
+        /* Zone Guide Information */
+        const zonesInformation = [
+            {
+                zone: 1,
+                nameBn: "জোন ১ (পুরান ঢাকা ও সদরঘাট)",
+                fullHolidayBn: "শুক্রবার (পূর্ণ দিন)",
+                halfHolidayBn: "শনিবার (দুপুর ২:০০ পর্যন্ত হাফ-ডে)",
+                areas: "পুরান ঢাকা, সদরঘাট, বাংলাবাজার, গুলিস্তান (দক্ষিণ), ওয়ারী, কাপ্তানবাজার, ইসলামপুর।"
+            },
+            {
+                zone: 2,
+                nameBn: "জোন ২ (রামপুরা, খিলগাঁও ও মালিবাগ)",
+                fullHolidayBn: "রবিবার (পূর্ণ দিন)",
+                halfHolidayBn: "সোমবার (দুপুর ২:০০ পর্যন্ত হাফ-ডে)",
+                areas: "রামপুরা, মালিবাগ (অংশ), খিলগাঁও, বাসাবো, মুগদা, সায়েদাবাদ, গোড়ান, মাদারটেক।"
+            },
+            {
+                zone: 3,
+                nameBn: "জোন ৩ (বেইলি রোড, মৌচাক ও মতিঝিল)",
+                fullHolidayBn: "বৃহস্পতিবার (পূর্ণ দিন)",
+                halfHolidayBn: "শুক্রবার (দুপুর ২:০০ পর্যন্ত হাফ-ডে)",
+                areas: "বেইলি রোড, মৌচাক, কাকরাইল, পল্টন, মতিঝিল, নয়া পল্টন, মগবাজার, শান্তিনগর।"
+            },
+            {
+                zone: 4,
+                nameBn: "জোন ৪ (ধানমন্ডি, নিউ মার্কেট ও এলিফ্যান্ট রোড)",
+                fullHolidayBn: "মঙ্গলবার (পূর্ণ দিন)",
+                halfHolidayBn: "বুধবার (দুপুর ২:০০ পর্যন্ত হাফ-ডে)",
+                areas: "ধানমন্ডি, এলিফ্যান্ট রোড, পান্থপথ, নিউ মার্কেট, গাউছিয়া, কারওয়ান বাজার (মলসমূহ), রাপা প্লাজা।"
+            },
+            {
+                zone: 5,
+                nameBn: "জোন ৫ (মিরপুর ১-২ ও মোহাম্মদপুর)",
+                fullHolidayBn: "বৃহস্পতিবার (পূর্ণ দিন)",
+                halfHolidayBn: "শুক্রবার (দুপুর ২:০০ পর্যন্ত হাফ-ডে)",
+                areas: "মোহাম্মদপুর, শ্যামলী, মিরপুর ১ ও ২, গাবতলী, কল্যাণপুর, আসাদ এভিনিউ।"
+            },
+            {
+                zone: 6,
+                nameBn: "জোন ৬ (গুলশান, বনানী, মিরপুর ১০-১৪ ও আগারগাঁও)",
+                fullHolidayBn: "রবিবার (পূর্ণ দিন)",
+                halfHolidayBn: "সোমবার (দুপুর ২:০০ পর্যন্ত হাফ-ডে)",
+                areas: "গুলশান ১ ও ২, বনানী, আগারগাঁও (আইডিবি), মিরপুর ১০, ১১, ১২, ১৩, ১৪, শেওড়াপাড়া।"
+            },
+            {
+                zone: 7,
+                nameBn: "জোন ৭ (উত্তরা, বাড্ডা ও বসুন্ধরা)",
+                fullHolidayBn: "বুধবার (পূর্ণ দিন)",
+                halfHolidayBn: "বৃহস্পতিবার (দুপুর ২:০০ পর্যন্ত হাফ-ডে)",
+                areas: "উত্তরা (সকল সেক্টর), বাড্ডা, বসুন্ধরা আবাসিক এলাকা, খিলক্ষেত, কুড়িল, জোয়ার সাহারা।"
+            }
+        ];
+
+        /* Categories definition */
+        const categories = [
+            { id: "all", labelBn: "🏢 সকল স্থান", labelEn: "All" },
+            { id: "mall", labelBn: "🛍️ শপিং মল", labelEn: "Malls" },
+            { id: "tech", labelBn: "💻 টেক ও কম্পিউটার", labelEn: "Tech" },
+            { id: "bank", labelBn: "🏦 ব্যাংক ও সরকারি", labelEn: "Govt & Banks" },
+            { id: "bazaar", labelBn: "🥬 কাঁচাবাজার", labelEn: "Bazaars" },
+            { id: "emergency", labelBn: "🏥 ২৪/৭ জরুরি", labelEn: "24/7 Emergency" }
+        ];
+
+        /* ==========================================================================
+           2. APP STATE MANAGEMENT
+           ========================================================================== */
+        let activeTab = 'markets';
+        let selectedCategory = 'all';
+        let simulatedDateOverride = null; // null means live time
+        let favorites = JSON.parse(localStorage.getItem('kobe_khola_favorites') || '[]');
+
+        /* ==========================================================================
+           3. STATUS CALCULATION ENGINE
+           ========================================================================== */
+        function getEffectiveDate() {
+            return simulatedDateOverride ? new Date(simulatedDateOverride) : new Date();
+        }
+
+        function calculateStatus(place, targetDate) {
+            if (place.is247) {
+                return {
+                    statusKey: '247',
+                    badge: '🔵 ২৪/৭ সম্পূর্ণ খোলা',
+                    badgeClass: 'bg-blue-100 text-blue-800 border-blue-300',
+                    pulseColor: 'bg-blue-500',
+                    message: 'জরুরি সেবা ও ফার্মেসি দিনরাত ২৪ ঘণ্টা খোলা থাকে',
+                    isOpen: true
+                };
+            }
+
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const currentDay = days[targetDate.getDay()];
+            const currentMins = targetDate.getHours() * 60 + targetDate.getMinutes();
+
+            const parseMins = (timeStr) => {
+                const [h, m] = timeStr.split(':').map(Number);
+                return h * 60 + m;
+            };
+
+            const openMins = parseMins(place.openTime);
+            const closeMins = parseMins(place.closeTime);
+            const halfCloseMins = parseMins(place.halfDayCloseTime);
+
+            // 1. Full Holiday Check
+            if (place.fullHoliday === currentDay || place.additionalFullHoliday === currentDay) {
+                return {
+                    statusKey: 'closed_today',
+                    badge: '🔴 আজ পূর্ণ বন্ধ (সাপ্তাহিক ছুটি)',
+                    badgeClass: 'bg-rose-100 text-rose-800 border-rose-300',
+                    pulseColor: 'bg-rose-500',
+                    message: `আজকে ${place.fullHolidayBn} সাপ্তাহিক পূর্ণ ছুটির দিন`,
+                    isOpen: false
+                };
+            }
+
+            // 2. Half Holiday Check
+            if (place.halfHoliday === currentDay) {
+                if (currentMins < openMins) {
+                    return {
+                        statusKey: 'closed_now',
+                        badge: '🟠 এখন বন্ধ (আজ হাফ-ডে)',
+                        badgeClass: 'bg-orange-100 text-orange-800 border-orange-300',
+                        pulseColor: 'bg-orange-500',
+                        message: `আজ সকাল ${format12Hr(place.openTime)}-এ খুলবে এবং দুপুর ${format12Hr(place.halfDayCloseTime)}-এ বন্ধ হবে`,
+                        isOpen: false
+                    };
+                }
+                if (currentMins >= openMins && currentMins < halfCloseMins) {
+                    const remainingMins = halfCloseMins - currentMins;
+                    if (remainingMins <= 45) {
+                        return {
+                            statusKey: 'closing_soon',
+                            badge: '🟡 একটু পর বন্ধ হবে (হাফ-ডে)',
+                            badgeClass: 'bg-amber-100 text-amber-900 border-amber-300',
+                            pulseColor: 'bg-amber-500',
+                            message: `আর মাত্র ${remainingMins} মিনিট খোলা (দুপুর ${format12Hr(place.halfDayCloseTime)}-এ বন্ধ)`,
+                            isOpen: true
+                        };
+                    }
+                    return {
+                        statusKey: 'open',
+                        badge: '🟢 এখন খোলা (হাফ-ডে)',
+                        badgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+                        pulseColor: 'bg-emerald-500',
+                        message: `আজ হাফ-ডে উপলক্ষ্যে দুপুর ${format12Hr(place.halfDayCloseTime)} পর্যন্ত খোলা`,
+                        isOpen: true
+                    };
+                }
+                return {
+                    statusKey: 'closed_now',
+                    badge: '🔴 এখন বন্ধ (হাফ-ডে শেষ)',
+                    badgeClass: 'bg-rose-100 text-rose-800 border-rose-300',
+                    pulseColor: 'bg-rose-500',
+                    message: `আজকের নির্ধারিত হাফ-ডে দুপুর ${format12Hr(place.halfDayCloseTime)}-এ শেষ হয়েছে`,
+                    isOpen: false
+                };
+            }
+
+            // 3. Normal Operating Days
+            if (currentMins >= openMins && currentMins < closeMins) {
+                const remainingMins = closeMins - currentMins;
+                if (remainingMins <= 45) {
+                    return {
+                        statusKey: 'closing_soon',
+                        badge: '🟡 একটু পর বন্ধ হবে',
+                        badgeClass: 'bg-amber-100 text-amber-900 border-amber-300',
+                        pulseColor: 'bg-amber-500',
+                        message: `আর মাত্র ${remainingMins} মিনিট খোলা (রাত/সন্ধ্যা ${format12Hr(place.closeTime)}-এ বন্ধ)`,
+                        isOpen: true
+                    };
+                }
+                return {
+                    statusKey: 'open',
+                    badge: '🟢 এখন খোলা',
+                    badgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+                    pulseColor: 'bg-emerald-500',
+                    message: `আজ রাত/সন্ধ্যা ${format12Hr(place.closeTime)} পর্যন্ত খোলা থাকবে`,
+                    isOpen: true
+                };
+            }
+
+            if (currentMins < openMins) {
+                return {
+                    statusKey: 'closed_now',
+                    badge: '🟠 এখন বন্ধ',
+                    badgeClass: 'bg-orange-100 text-orange-800 border-orange-300',
+                    pulseColor: 'bg-orange-500',
+                    message: `আজ সকাল ${format12Hr(place.openTime)}-এ খুলবে`,
+                    isOpen: false
+                };
+            }
+
+            return {
+                statusKey: 'closed_now',
+                badge: '🟠 এখন বন্ধ (আজকের মতো শেষ)',
+                badgeClass: 'bg-slate-200 text-slate-800 border-slate-300',
+                pulseColor: 'bg-slate-500',
+                message: `নিয়মিত খোলা থাকে সকাল ${format12Hr(place.openTime)} থেকে রাত ${format12Hr(place.closeTime)}`,
+                isOpen: false
+            };
+        }
+
+        function format12Hr(time24) {
+            if (!time24) return '';
+            let [h, m] = time24.split(':').map(Number);
+            const period = h >= 12 ? 'PM' : 'AM';
+            h = h % 12 || 12;
+            return `${h}:${m < 10 ? '0' + m : m} ${period}`;
+        }
+
+        /* ==========================================================================
+           4. UI RENDER ENGINE
+           ========================================================================== */
+        function renderCategoryPills() {
+            const container = document.getElementById('categoryPillsContainer');
+            container.innerHTML = categories.map(cat => {
+                const isActive = selectedCategory === cat.id;
+                return `
+                    <button 
+                        onclick="setCategory('${cat.id}')"
+                        class="px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                            isActive 
+                            ? 'bg-slate-900 text-white shadow-sm' 
+                            : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
+                        }"
+                    >
+                        <span>${cat.labelBn}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function renderMarkets() {
+            const query = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+            const zoneFilter = document.getElementById('zoneSelectFilter').value;
+            const openOnly = document.getElementById('openOnlyToggle').checked;
+            const clearBtn = document.getElementById('clearSearchBtn');
+            const targetDate = getEffectiveDate();
+
+            if (query.length > 0) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+
+            let openCount = 0;
+            let closingSoonCount = 0;
+            let closedTodayCount = 0;
+            let count247 = 0;
+
+            const filtered = locationsData.filter(place => {
+                const status = calculateStatus(place, targetDate);
+
+                // Update counters
+                if (place.is247) count247++;
+                if (status.statusKey === 'open') openCount++;
+                if (status.statusKey === 'closing_soon') closingSoonCount++;
+                if (status.statusKey === 'closed_today') closedTodayCount++;
+
+                // Search matching
+                const matchesQuery = 
+                    place.name.toLowerCase().includes(query) ||
+                    place.bnName.includes(query) ||
+                    place.area.toLowerCase().includes(query) ||
+                    place.categoryBn.includes(query);
+
+                // Category matching
+                const matchesCategory = selectedCategory === 'all' || place.category === selectedCategory;
+
+                // Zone matching
+                const matchesZone = zoneFilter === 'all' || place.zone.toString() === zoneFilter;
+
+                // Open only matching
+                const matchesOpenOnly = !openOnly || status.isOpen;
+
+                return matchesQuery && matchesCategory && matchesZone && matchesOpenOnly;
+            });
+
+            // Update Header Stats Counters
+            document.getElementById('statOpenCount').innerText = openCount;
+            document.getElementById('statClosingSoonCount').innerText = closingSoonCount;
+            document.getElementById('statClosedTodayCount').innerText = closedTodayCount;
+            document.getElementById('stat247Count').innerText = count247;
+
+            const grid = document.getElementById('marketsGrid');
+            const emptyState = document.getElementById('emptySearchState');
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+
+            grid.innerHTML = filtered.map(place => {
+                const status = calculateStatus(place, targetDate);
+                const isFav = favorites.includes(place.id);
+
+                return `
+                    <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm hover:shadow-md card-transition flex flex-col justify-between space-y-4 relative overflow-hidden">
+                        
+                        <!-- Top Header Row -->
+                        <div class="space-y-2">
+                            <div class="flex items-start justify-between gap-2">
+                                <span class="px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-bold">
+                                    জোন ${place.zone} • ${place.categoryBn}
+                                </span>
+                                
+                                <button onclick="toggleFavorite('${place.id}')" class="text-slate-400 hover:text-rose-500 transition-colors p-1" title="পছন্দের তালিকায় রাখুন">
+                                    <i data-lucide="heart" class="w-5 h-5 ${isFav ? 'fill-rose-500 text-rose-500' : ''}"></i>
+                                </button>
+                            </div>
+
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900 leading-snug">${place.bnName}</h3>
+                                <p class="text-xs text-slate-500 font-en font-medium">${place.name}</p>
+                            </div>
+                        </div>
+
+                        <!-- Location & Address -->
+                        <div class="flex items-start gap-2 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+                            <span class="font-medium">${place.area} (${place.address})</span>
+                        </div>
+
+                        <!-- Status Badge & Explanatory Text -->
+                        <div class="space-y-1.5 pt-1">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold border ${status.badgeClass}">
+                                <span class="w-2 h-2 rounded-full ${status.pulseColor} animate-pulse"></span>
+                                <span>${status.badge}</span>
+                            </div>
+                            <p class="text-xs text-slate-600 pl-1 font-medium leading-relaxed">${status.message}</p>
+                        </div>
+
+                        <!-- Weekly Schedule Summary Footer -->
+                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+                            <div>
+                                <span class="block">পূর্ণ বন্ধ: <strong class="text-slate-700">${place.fullHolidayBn}</strong></span>
+                                <span class="block">হাফ-ডে: <strong class="text-slate-700">${place.halfHolidayBn}</strong></span>
+                            </div>
+
+                            <a 
+                                href="${place.googleMapsUrl}" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold transition-all"
+                            >
+                                <span>ম্যাপ দেখুন</span>
+                                <i data-lucide="external-link" class="w-3 h-3"></i>
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        function renderZoneGuide() {
+            const container = document.getElementById('zoneGuideCards');
+            container.innerHTML = zonesInformation.map(z => `
+                <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200/80 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 rounded-full bg-slate-900 text-white text-xs font-bold">জোন ${z.zone}</span>
+                    </div>
+
+                    <h3 class="text-base font-bold text-slate-900">${z.nameBn}</h3>
+
+                    <div class="space-y-1.5 text-xs">
+                        <div class="flex items-center gap-2 text-rose-700 font-semibold bg-rose-50 p-2 rounded-lg border border-rose-100">
+                            <i data-lucide="calendar-x" class="w-4 h-4 shrink-0"></i>
+                            <span>পূর্ণ বন্ধ: ${z.fullHolidayBn}</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-amber-800 font-medium bg-amber-50 p-2 rounded-lg border border-amber-100">
+                            <i data-lucide="clock" class="w-4 h-4 shrink-0"></i>
+                            <span>হাফ-ডে বন্ধ: ${z.halfHolidayBn}</span>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-slate-600 leading-relaxed pt-1 border-t border-slate-200">
+                        <strong>অন্তর্ভুক্ত এলাকাসমূহ:</strong> ${z.areas}
+                    </p>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        /* ==========================================================================
+           5. INTERACTION & SIMULATOR HANDLERS
+           ========================================================================== */
+        function switchTab(tab) {
+            activeTab = tab;
+            const marketsView = document.getElementById('marketsView');
+            const zonesView = document.getElementById('zonesView');
+            const marketsBtn = document.getElementById('tabMarketsBtn');
+            const zonesBtn = document.getElementById('tabZonesBtn');
+
+            if (tab === 'markets') {
+                marketsView.classList.remove('hidden');
+                zonesView.classList.add('hidden');
+                marketsBtn.className = "px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-sm font-semibold flex items-center gap-1.5 transition-all";
+                zonesBtn.className = "px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition-all";
+            } else {
+                marketsView.classList.add('hidden');
+                zonesView.classList.remove('hidden');
+                zonesBtn.className = "px-3 py-1.5 rounded-lg bg-white text-slate-900 shadow-sm font-semibold flex items-center gap-1.5 transition-all";
+                marketsBtn.className = "px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition-all";
+                renderZoneGuide();
+            }
+        }
+
+        function setCategory(catId) {
+            selectedCategory = catId;
+            renderCategoryPills();
+            renderMarkets();
+        }
+
+        function toggleFavorite(id) {
+            if (favorites.includes(id)) {
+                favorites = favorites.filter(f => f !== id);
+                showToast("পছন্দের তালিকা থেকে সরানো হয়েছে");
+            } else {
+                favorites.push(id);
+                showToast("পছন্দের তালিকায় সংরক্ষিত হয়েছে");
+            }
+            localStorage.setItem('kobe_khola_favorites', JSON.stringify(favorites));
+            renderMarkets();
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            renderMarkets();
+        }
+
+        function resetAllFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('zoneSelectFilter').value = 'all';
+            document.getElementById('openOnlyToggle').checked = false;
+            selectedCategory = 'all';
+            renderCategoryPills();
+            renderMarkets();
+        }
+
+        /* Time Travel / Simulator Logic */
+        function setSimulatedTime(preset) {
+            const desc = document.getElementById('simulatedTimeDescription');
+            const now = new Date();
+
+            if (preset === 'now') {
+                simulatedDateOverride = null;
+                desc.innerHTML = `বর্তমানে <strong class="text-amber-950 font-semibold">লাইভ সময়</strong> দেখা হচ্ছে। অন্য কোনো দিন/সময়ের তথ্য দেখতে সময় পরিবর্তন করুন:`;
+            } else if (preset === 'tomorrow_3pm') {
+                const target = new Date(now);
+                target.setDate(target.getDate() + 1);
+                target.setHours(15, 0, 0, 0);
+                simulatedDateOverride = target;
+                desc.innerHTML = `সিমুলেশন মোড: <strong class="text-amber-950 font-semibold">আগামীকাল বিকাল ৩:০০ টা</strong>-এর সময়সূচী দেখা হচ্ছে।`;
+            } else if (preset === 'friday_11am') {
+                const target = new Date(now);
+                const day = target.getDay();
+                const distToFriday = (5 - day + 7) % 7 || 7;
+                target.setDate(target.getDate() + distToFriday);
+                target.setHours(11, 0, 0, 0);
+                simulatedDateOverride = target;
+                desc.innerHTML = `সিমুলেশন মোড: <strong class="text-amber-950 font-semibold">আসন্ন শুক্রবার সকাল ১১:০০ টা</strong>-এর সময়সূচী দেখা হচ্ছে।`;
+            } else if (preset === 'tuesday_4pm') {
+                const target = new Date(now);
+                const day = target.getDay();
+                const distToTuesday = (2 - day + 7) % 7 || 7;
+                target.setDate(target.getDate() + distToTuesday);
+                target.setHours(16, 0, 0, 0);
+                simulatedDateOverride = target;
+                desc.innerHTML = `সিমুলেশন মোড: <strong class="text-amber-950 font-semibold">আসন্ন মঙ্গলবার বিকাল ৪:০০ টা</strong>-এর সময়সূচী দেখা হচ্ছে।`;
+            }
+
+            renderMarkets();
+        }
+
+        function handleCustomTimeChange(value) {
+            if (!value) return;
+            simulatedDateOverride = new Date(value);
+            const desc = document.getElementById('simulatedTimeDescription');
+            desc.innerHTML = `সিমুলেশন মোড: <strong class="text-amber-950 font-semibold">${simulatedDateOverride.toLocaleString('bn-BD')}</strong>-এর সময়সূচী দেখা হচ্ছে।`;
+            renderMarkets();
+        }
+
+        /* Modal & Toast Utilities */
+        function openCorrectionModal() {
+            document.getElementById('correctionModal').classList.remove('hidden');
+        }
+
+        function closeCorrectionModal() {
+            document.getElementById('correctionModal').classList.add('hidden');
+        }
+
+        function handleCorrectionSubmit(e) {
+            e.preventDefault();
+            closeCorrectionModal();
+            showToast("ধন্যবাদ! আপনার প্রস্তাবিত তথ্যটি যাচাই করে যোগ করা হবে।");
+            document.getElementById('correctionForm').reset();
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastNotification');
+            document.getElementById('toastMessage').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        /* Live Clock Banner */
+        function updateLiveClock() {
+            const now = new Date();
+            const options = { weekday: 'short', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            document.getElementById('currentTimeText').innerText = now.toLocaleDateString('bn-BD', options);
+        }
+
+        /* ==========================================================================
+           6. INITIALIZATION ON WINDOW LOAD
+           ========================================================================== */
+        window.onload = function () {
+            lucide.createIcons();
+            renderCategoryPills();
+            renderMarkets();
+            updateLiveClock();
+            setInterval(updateLiveClock, 1000);
+        };
+    </script>
+</body>
+</html>
